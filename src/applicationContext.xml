@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+      http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
+<!--引入数据库参数属性文件-->
+    <context:property-placeholder location="classpath:jdbc.properties"/>
+    <!--配置数据源-->
+<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
+    <property name="username"  value="${jdbc.user}"/>
+    <property name="url"  value="${jdbc.url}"/>
+    <property name="password"  value="${jdbc.pwd}"/>
+
+    <property name="driverClassName"  value="${jdbc.driver}"/>
+
+
+</bean>
+<!-- 配置sqlsessionfactory-->
+   <bean  id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+       <property name="dataSource" ref="dataSource"></property>
+      <property name="configLocation" value=""></property>
+       <property name="typeAliasesPackage" value="com.lq.pojo"/>
+   </bean>
+<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+    <property name="basePackage" value="com.lq.mapper"/>
+
+</bean>
+</beans>

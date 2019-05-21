@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lq.mapper.OrderMapper">
+<sql id="order_sql">
+ `id`,
+  `user_id` userId,
+  `number`,
+  `createtime`,
+  `note` 
+</sql>
+<select id="findOrder" parameterType="int" resultType="order">
+
+SELECT 
+ <include refid="order_sql" />
+ 
+FROM
+  `order` 
+ <where>
+ 
+   id=#{id}
+</where>
+</select>
+
+
+<select id="findSomeOrder" parameterType="string" resultType="order">
+SELECT 
+ <include refid="order_sql" />
+FROM
+  `order` 
+   <where>
+    user_id like '%${value}%'
+    </where>
+
+
+</select>
+
+<resultMap type="order" id="order_user_map">
+<id property="id" column="id"/>
+<result property="userId" column="user_id"/>
+<result property="number" column="number"/>
+<result property="createtime" column="createtime"/>
+<result property="note" column="note"/>
+
+<association property="user" javaType="user">
+<id property="id" column="user_id"/>
+<result property="username" column="username"/>
+<result property="sex" column="sex"/>
+<result property="birthday" column="birthday"/>
+<result property="address" column="address"/>
+
+</association>
+
+</resultMap>
+
+
+
+
+<select id="getOrderUser" resultMap="order_user_map">
+SELECT 
+  o.`id`,
+  o.`user_id`,
+  o.`number`,
+  o.`createtime`,
+  o.`note` ,
+  u.`username`,
+  u.`birthday`,
+  u.`sex`,
+  u.`address`
+FROM
+`order` o  LEFT JOIN  `user` u  ON  o.`user_id`=u.`id`
+
+
+
+
+</select>
+</mapper>

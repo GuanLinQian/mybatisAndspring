@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lq.mapper.UserMapper">
+<!-- 查询 -->
+<select id="userById" parameterType="int" resultType="user">
+
+select *from user where id=#{id2}
+</select>
+
+<!-- 增加 -->
+<insert id="userAdd" parameterType="user" useGeneratedKeys="true" keyProperty="id">
+<!-- 获取自增id -->
+<!-- <selectKey keyProperty="id" resultType="int" order="AFTER">
+select last_insert_id()
+
+</selectKey> -->
+
+INSERT INTO `user` (
+
+  `username`,
+  `birthday`,
+  `sex`,
+  `address`
+) 
+VALUES
+  (
+  
+    #{username},
+    #{birthday},
+    #{sex},
+    #{address}
+  ) 
+
+
+</insert>
+
+<resultMap type="user" id="user_order_map">
+<id property="id" column="id"/>
+<result property="username" column="username"/>
+<result property="sex" column="sex"/>
+<result property="birthday" column="birthday"/>
+<result property="address" column="address"/>
+
+<collection property="orders" ofType="order">
+<id property="id" column="oid"/>
+<result property="userId" column="user_id"/>
+<result property="number" column="number"/>
+<result property="createtime" column="createtime"/>
+<result property="note" column="note"/>
+
+
+</collection>
+
+
+</resultMap>
+
+
+<select id="getUserOrder" resultMap="user_order_map">
+SELECT 
+  u.`id`,
+  u.`username`,
+  u.`birthday`,
+  u.`sex`,
+  u.`address`,
+  o.`id` oid,
+  o.`createtime`,
+  o.`note`,
+  o.`number`,
+  o.`user_id`
+FROM
+  `user` u LEFT JOIN `order` o  ON u.`id`=o.`user_id`;
+
+
+
+
+</select>
+
+  <select id="getUsers" resultType="user">
+
+
+select *from user
+
+
+  </select>
+</mapper>
